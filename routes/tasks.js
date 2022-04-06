@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
         sort = null
     }
     await pool.promise()
-        .query('SELECT * FROM tasks' + params)
+        .query('SELECT * FROM admlat_tasks' + params)
         .then(([rows, fields]) => {
               res.render('tasks.njk', {
                 flash: flash,
@@ -63,7 +63,7 @@ router.get('/:id', async (req, res, next) => {
         });
     }
     await pool.promise()
-        .query('SELECT * FROM tasks WHERE id = ?', [id])
+        .query('SELECT * FROM admlat_tasks WHERE id = ?', [id])
         .then(([rows, fields]) => {
             res.json({
                 task: {
@@ -91,7 +91,7 @@ router.get('/:id/delete', async (req, res, next) => {
         });
     }
     await pool.promise()
-    .query('DELETE FROM tasks WHERE id=?', [id])
+    .query('DELETE FROM admlat_tasks WHERE id=?', [id])
     .then((response) => {
         if(response[0].affectedRows === 1){
             req.session.flash = "task deleted"
@@ -120,7 +120,7 @@ router.post('/:id/complete', async (req, res, next) => {
         });
     }
     await pool.promise()
-    .query('UPDATE tasks SET completed = !completed WHERE id = ?', [id])
+    .query('UPDATE admlat_tasks SET completed = !completed WHERE id = ?', [id])
     .then((response) => {
         if(response[0].affectedRows !== 1){
             req.session.flash = "task completed"
@@ -143,7 +143,7 @@ router.post('/', async (req, res, next) => {
     // { "task": "koda post" }
     const task = req.body.task;
     await pool.promise()
-    .query('INSERT INTO tasks (task) VALUES (?)', [task])
+    .query('INSERT INTO admlat_tasks (task) VALUES (?)', [task])
     .then((response) => {
         if (response[0].affectedRows == 1){
             res.redirect('/tasks')
